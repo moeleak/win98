@@ -114,7 +114,7 @@ body.windows-desktop {
 }
 
 #window-container > .window > div[style*="cursor: nwse-resize"] { /* Example selector based on inline style */
-     touch-action: none; /* 禁用缩放手柄上的默认触摸行为 */
+     touch-action: none; /* <<<--- 添加这一行：禁用缩放手柄上的默认触摸行为 */
 }
 
 /* Style for content loaded inside the window body if needed */
@@ -187,7 +187,7 @@ body.windows-desktop {
 /* --- Font Adjustments --- */
 #window-container > .window > .window-body {
     /* Base font size */
-    font-size: 12px;
+    font-size: 12px; /* 像素字体通常在特定大小下效果最好，12px 或 16px 比较常见 */
     line-height: 1.6; /* 可能需要调整行高以适应像素字体 */
     /* Font Stack: 将 'Zpix' 放在最前面 */
     font-family: "Zpix", "Tahoma", "SimSun", "Microsoft YaHei", "PingFang SC", sans-serif;
@@ -234,94 +234,93 @@ body.windows-desktop {
 }
 
 
-/* --- 代码块样式修正 (针对 Table 结构) --- */
+/* --- 代码块样式修正 --- */
+#window-container > .window > .window-body pre {
+    /* 1. 重置可能导致问题的样式 */
+    border: none;            /* 移除 pre 元素自身可能存在的边框 */
+    background: none;        /* 移除 pre 元素自身的背景，让下面的样式生效 */
+    margin: 1em 0;         /* 保留垂直间距，移除水平外边距 (可能用于放置数字框) */
+    padding: 0;            /* 移除内边距，由内部 code 或我们自己控制 */
+    position: relative;      /* 确保 ::before/::after 相对自己定位 */
 
-/* 1. 重置包含代码块的 table 样式 */
-#window-container > .window > .window-body table {
-    border-collapse: collapse !important; /* 合并边框 */
-    border-spacing: 0 !important;      /* 移除单元格间距 */
-    border: none !important;           /* 移除表格外边框 */
-    width: 100% !important;          /* 表格宽度100% */
-    margin: 1em 0 !important;        /* 保留垂直外边距 */
-    padding: 0 !important;           /* 移除表格内边距 */
-    background: none !important;     /* 清除表格背景 */
-    font-size: inherit !important;     /* 继承字体大小 */
-}
+    /* 2. 应用类似 Win98 输入框/文本区域的样式 */
+    background-color: #ffffff; /* 白色背景 */
+    /* 使用 98.css 的经典 inset 边框效果 */
+    box-shadow: inset 1px 1px 0px #ffffff, inset -1px -1px 0px #848584;
+    border: 1px solid;
+    border-color: #848584 #ffffff #ffffff #848584; /* top&left dark, bottom&right light */
+    padding: 8px;            /* 添加内部空间 */
 
-/* 2. 重置表格内的 a, tbody, tr, td 的基础样式 */
-#window-container > .window > .window-body table tbody,
-#window-container > .window > .window-body table tr,
-#window-container > .window > .window-body table td {
-    border: none !important;           /* 移除单元格边框 */
-    padding: 0 !important;           /* 移除单元格内边距 */
-    margin: 0 !important;            /* 移除外边距 */
-    background: none !important;     /* 清除单元格背景 */
-    vertical-align: top !important;    /* 垂直对齐方式 */
-    font-size: inherit !important;     /* 继承字体大小 */
-    line-height: inherit !important;   /* 继承行高 */
-}
+    /* 3. 字体和滚动 */
+    font-family: "Courier New", Courier, monospace; /* 强制使用等宽字体 */
+    font-size: 12px;         /* 调整字体大小 */
+    line-height: 1.5;        /* 行高 */
+    white-space: pre-wrap;   /* 允许长行自动换行 */
+    word-wrap: break-word;   /* 在单词边界处换行 */
+    overflow: auto;        /* 如果内容超出，显示滚动条 */
 
-/* 3. 隐藏行号列 (第一列) */
-#window-container > .window > .window-body table td.gutter {
-    display: none !important;
-}
-
-/* 4. 确保代码列占据所有可用空间 (虽然隐藏第一列后会自动占据，但明确一下) */
-#window-container > .window > .window-body table td.code {
-    width: 100% !important;
-}
-
-/* 5. 清理代码列内的 pre 元素的默认或继承样式 */
-#window-container > .window > .window-body table td.code pre {
-    margin: 0 !important;            /* 移除 pre 的外边距 */
-    padding: 0 !important;           /* 移除 pre 的内边距 (样式将施加在 pre 上) */
-    border: none !important;           /* 移除 pre 可能有的边框 */
-    background: none !important;     /* 移除 pre 可能有的背景 */
-    box-shadow: none !important;       /* 移除 pre 可能有的阴影 */
-    overflow: visible !important;    /* 让 pre 自身不滚动，滚动由样式决定 */
-    width: auto !important;          /* 宽度自动 */
-    position: static !important;     /* 重置定位 */
-    white-space: normal !important;  /* 重置 white-space，后面会重新设置 */
+    /* 4. 尝试隐藏左边的数字框 (基于猜测的常见模式) */
+    /* 如果数字框是 pre 的伪元素 */
+    &::before {
+        display: none !important;
+    }
+    /* 如果数字框是 pre 内部或外部的特定元素 (需要根据实际HTML调整选择器) */
+    /* 例如：.line-number, .gutter, etc. */
+    /* 这个选择器是猜测，可能无效 */
+    + .line-number-wrapper, /* 如果数字框是 pre 旁边的兄弟元素 */
+    > .line-number {        /* 如果数字框是 pre 的子元素 */
+        display: none !important;
+    }
 }
 
-/* 6. 将 Win98 风格样式应用到代码列的 pre 元素上 */
-#window-container > .window > .window-body table td.code pre {
-    display: block !important;
-    background-color: #ffffff !important; /* 白色背景 */
-    /* Win98 风格边框 */
-    box-shadow: inset 1px 1px 0px #ffffff, inset -1px -1px 0px #848584 !important;
-    border: 1px solid !important;
-    border-color: #848584 #ffffff #ffffff #848584 !important;
-    padding: 8px !important;            /* 内边距 */
-    font-family: "Courier New", Courier, monospace !important; /* 等宽字体 */
-    font-size: 12px !important;         /* 字体大小 */
-    line-height: 1.5 !important;        /* 行高 */
-    color: #000000 !important;         /* 文本颜色 */
-    white-space: pre-wrap !important;   /* 允许长行自动换行 */
-    word-wrap: break-word !important;   /* 在单词边界处换行 */
-    overflow: auto !important;        /* 如果内容超出，显示滚动条 */
-    min-height: 1.5em; /* 最小高度，防止空代码块塌陷 */
+/* 可选：确保 pre 内部的 code 标签样式干净 */
+#window-container > .window > .window-body pre code {
+    display: block; /* 让 code 占据 pre 的宽度 */
+    padding: 0;     /* code 不需要额外的内边距 */
+    background: none; /* code 不需要背景色 */
+    border: none;   /* code 不需要边框 */
+    box-shadow: none; /* code 不需要阴影 */
+    font-family: inherit; /* 继承 pre 的字体 */
+    color: #000000; /* 代码文字颜色 */
 }
 
-/* 7. 清理代码列内 pre > code 或 pre > span 的样式 (以防万一) */
-#window-container > .window > .window-body table td.code pre code,
-#window-container > .window > .window-body table td.code pre span.line {
-    display: inline !important; /* 改回 inline，因为 pre 控制块级 */
-    background: none !important;
-    border: none !important;
-    padding: 0 !important;
-    margin: 0 !important;
-    font-family: inherit !important; /* 继承 pre 的字体 */
-    font-size: inherit !important;
-    line-height: inherit !important;
-    /* 保留语法高亮的颜色 */
-    /* color: inherit !important; */ /* 不要取消这行的注释，否则语法高亮会失效 */
-    white-space: inherit !important; /* 继承 pre 的换行设置 */
-    position: static !important;
-    box-shadow: none !important;
+/* 为 Gitalk 评论输入框设置 Zpix 字体 */
+#window-container .window .window-body .gt-header-textarea {
+    font-family: "Zpix", "Courier New", Courier, monospace; /* 使用 Zpix，等宽字体作为后备 */
+    font-size: 13px; /* 调整为你希望的像素字体大小 */
+    line-height: 1.6; /* 调整行高以适应字体 */
+    /* 应用像素字体渲染优化 */
+    font-smooth: never;
+    -webkit-font-smoothing: none;
+    image-rendering: pixelated;
+    image-rendering: crisp-edges;
 }
-/* 移除行号 pre 里的换行符，虽然隐藏了，但以防万一影响布局 */
-#window-container > .window > .window-body table td.gutter pre br {
-    display: none !important;
+
+/* 为已发布的评论内容区域 (.gt-comment-body, .markdown-body) 设置 Zpix 字体 */
+/* .gt-comment-body 通常包含 .markdown-body，所以可以一起设置 */
+#window-container .window .window-body .gt-comment-body,
+#window-container .window .window-body .markdown-body {
+    font-family: "Zpix", "SimSun", "Microsoft YaHei", sans-serif; /* 使用 Zpix，宋体/雅黑等作为后备 */
+    font-size: 13px; /* 调整为你希望的像素字体大小 */
+    line-height: 1.6; /* 调整行高以适应字体 */
+    /* 应用像素字体渲染优化 */
+    font-smooth: never;
+    -webkit-font-smoothing: none;
+    image-rendering: pixelated;
+    image-rendering: crisp-edges;
 }
+
+/* 可选：如果评论内容里的某些元素（如 <p>, <li>）仍然没有应用字体，可以强制指定 */
+/* 取消下面的注释并按需使用 */
+#window-container .window .window-body .markdown-body p,
+#window-container .window .window-body .markdown-body li,
+#window-container .window .window-body .markdown-body pre,
+#window-container .window .window-body .markdown-body code {
+    font-family: inherit !important; /* 尝试继承父元素的字体，可能需要 !important 强制 */
+}
+
+/* Custom close button visual (if default isn't desired) */
+/* .title-bar-controls button[aria-label="Close"] { */
+    /* Optional: Add custom styling or use :before for an icon font */
+/* } */
 

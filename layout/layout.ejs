@@ -5,10 +5,21 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
   <title><%= config.title %><% if (page.title) { %> - <%= page.title %><% } %></title>
+  <!-- 引入 98.css -->
   <link rel="stylesheet" href="https://unpkg.com/98.css" />
+  <!-- 引入自定义的补充 CSS -->
   <link rel="stylesheet" href="<%- url_for('/css/style.css') %>">
+
+  <%# --- 全局加载 Gitalk CSS (如果主题启用) --- %>
+  <% if (theme.gitalk && theme.gitalk.enable) { %>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+  <% } %>
+
+  <%# Hexo 注入的头部脚本会在这里 %>
 </head>
 <body class="windows-desktop">
+
+  <!-- Hexo 渲染的初始内容，默认隐藏，仅供 JS fetch 读取 -->
   <div id="initial-content-wrapper" style="display: none;">
     <%- body %>
   </div>
@@ -30,10 +41,74 @@
         <img src="<%- url_for('/images/icon_network.png') %>" alt="网上邻居">
         <span>网上邻居</span>
       </a>
+      <!-- 记事本 (留言板) -->
+      <%# Note: Check if the guestbook page actually has comments enabled before showing icon? Or always show? %>
+      <a href="<%- url_for('/guestbook/') %>" class="desktop-icon" id="icon-guestbook" data-window-title="留言板">
+        <img src="<%- url_for('/images/icon_notepad.png') %>" alt="留言板">
+        <span>留言板</span>
+      </a>
   </div>
 
+  <!-- 这个容器用来放置动态创建的窗口 -->
   <div id="window-container"></div>
 
+  <%# --- 全局加载 Gitalk JS 库 (如果主题启用) --- %>
+  <% if (theme.gitalk && theme.gitalk.enable) { %>
+    <script src="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+
+    <%# --- 全局定义 Gitalk 初始化函数 --- %>
+    <script>
+      function initializeGitalkForWindow(targetContainerId, uniquePageId) {
+        console.log(`[Gitalk Global] Attempting init for container #${targetContainerId}, page ID: ${uniquePageId}`);
+        const containerElement = document.getElementById(targetContainerId);
+
+        if (!containerElement) {
+          console.error(`[Gitalk Global] Error: Container #${targetContainerId} not found.`);
+          return;
+        }
+        if (typeof Gitalk === 'undefined') {
+          console.error("[Gitalk Global] Error: Gitalk library not loaded.");
+          containerElement.innerHTML = '<p style="color:red;">错误：Gitalk 库未加载！</p>';
+          return;
+        }
+
+        // --- Prevent re-initialization on the same container ---
+        if (containerElement.dataset.gitalkInitialized === 'true') {
+             console.log(`[Gitalk Global] Info: Gitalk already initialized for #${targetContainerId}. Skipping.`);
+             return;
+        }
+
+
+        try {
+          const gitalkInstance = new Gitalk({
+            clientID: '<%- theme.gitalk.clientID %>',
+            clientSecret: '<%- theme.gitalk.clientSecret %>', // Still here, be mindful
+            repo: '<%- theme.gitalk.repo %>',
+            owner: '<%- theme.gitalk.owner %>',
+            admin: <%- JSON.stringify(theme.gitalk.admin || [theme.gitalk.owner]) %>,
+            id: uniquePageId, // Use the passed unique ID (contentUrl from win98.js)
+            language: '<%- theme.gitalk.language || 'zh-CN' %>',
+            distractionFreeMode: <%= theme.gitalk.distractionFreeMode === true %>,
+            // proxy: '<%- theme.gitalk.proxy || '' %>'
+          });
+
+          console.log(`[Gitalk Global] Instance created for #${targetContainerId}. Rendering...`);
+          gitalkInstance.render(targetContainerId);
+          containerElement.dataset.gitalkInitialized = 'true'; // Mark as initialized
+          console.log(`[Gitalk Global] Render command issued for #${targetContainerId}.`);
+
+        } catch (error) {
+          console.error(`[Gitalk Global] Error during Gitalk init/render for #${targetContainerId}:`, error);
+          containerElement.innerHTML = `<p style="color:red;">Gitalk 初始化/渲染出错: ${error.message}</p>`;
+          // Remove initialized flag if setup failed mid-way? Maybe not necessary.
+          // delete containerElement.dataset.gitalkInitialized;
+        }
+      }
+    </script>
+  <% } %>
+
+
+  <!-- 引入交互逻辑的 JS (放在 Gitalk 函数定义之后) -->
   <script src="<%- url_for('/js/win98.js') %>"></script>
 </body>
 </html>
