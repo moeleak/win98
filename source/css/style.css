@@ -319,6 +319,59 @@ body.windows-desktop {
     font-family: inherit !important; /* 尝试继承父元素的字体，可能需要 !important 强制 */
 }
 
+/* --- Desktop Icon Font Customization --- */
+
+.desktop-icon span {
+    /* 1. 设置 Zpix 字体，并提供后备字体 */
+    font-family: "Zpix", "SimSun", "Microsoft YaHei", sans-serif;
+
+    /* 2. 调整字体大小（如果需要，可以覆盖之前的 11px 设置） */
+    /* font-size: 12px; */ /* 比如改为 12px，如果 11px 下 Zpix 不清晰 */
+
+    /* 3. 应用像素字体渲染优化（和之前 Gitalk 的一样） */
+    font-smooth: never;          /* Firefox */
+    -webkit-font-smoothing: none; /* Chrome, Safari, Edge */
+    image-rendering: pixelated;   /* 尝试让浏览器以像素化方式渲染 */
+    image-rendering: crisp-edges; /* 另一个选项 */
+
+    /* 4. 其他现有样式（比如颜色、文本对齐等）应该保持不变 */
+    /* color: white; */ /* 已有 */
+    /* text-align: center; */ /* 父元素 a 已处理 */
+    /* padding: 1px 3px; */ /* 已有 */
+    /* user-select: none; */ /* 父元素 a 已处理 */
+}
+
+/* --- Window Opening Animation --- */
+.window {
+    /* Base style for windows, ensure transform-origin is set if using scale */
+    transform-origin: center center; /* Or top left if preferred */
+    /* Add other base window styles if needed */
+}
+
+.window-opening {
+    /* Define the transition for the opening animation */
+    /* Apply transition to properties that change */
+    transition: opacity 0.25s ease-out,
+                transform 0.25s ease-out,
+                left 0.25s ease-out,
+                top 0.25s ease-out,
+                width 0.25s ease-out,
+                height 0.25s ease-out;
+}
+
+/* --- 其他样式保持不变 --- */
+/* ... (你现有的所有其他 CSS 规则) ... */
+
+/* Ensure resize handle doesn't interfere with animation visually if needed */
+/* (Probably not necessary, but good to keep in mind) */
+.window-opening > div[style*="cursor: nwse-resize"] {
+    /* visibility: hidden; */ /* Hide during animation if it looks odd */
+}
+.window:not(.window-opening) > div[style*="cursor: nwse-resize"] {
+   /* visibility: visible; */
+}
+
+
 /* Custom close button visual (if default isn't desired) */
 /* .title-bar-controls button[aria-label="Close"] { */
     /* Optional: Add custom styling or use :before for an icon font */

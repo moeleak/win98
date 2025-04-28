@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
+  <%# --- Base Title Set Here --- %>
   <title><%= config.title %><% if (page.title) { %> - <%= page.title %><% } %></title>
   <!-- 引入 98.css -->
   <link rel="stylesheet" href="https://unpkg.com/98.css" />
@@ -17,7 +18,8 @@
 
   <%# Hexo 注入的头部脚本会在这里 %>
 </head>
-<body class="windows-desktop">
+<%# --- Add data-base-title to body --- %>
+<body class="windows-desktop" data-base-title="<%= config.title %>">
 
   <!-- Hexo 渲染的初始内容，默认隐藏，仅供 JS fetch 读取 -->
   <div id="initial-content-wrapper" style="display: none;">
@@ -112,4 +114,5 @@
   <script src="<%- url_for('/js/win98.js') %>"></script>
 </body>
 </html>
+
 
