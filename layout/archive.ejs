@@ -1,0 +1,15 @@
+<div class="archive-list-container" id="content-main">
+    <h1>存档</h1>
+    <hr>
+    <%
+      var lastYear = 0;
+      site.posts.sort('date', 'desc').each(function(post){
+        var currentYear = date(post.date, 'YYYY');
+        if (lastYear !== currentYear) {
+          lastYear = currentYear; %>
+          <h2><%= currentYear %></h2>
+        <% } %>
+        <p><%- date(post.date, config.date_format || 'YYYY-MM-DD') %> » <a href="<%- url_for(post.path) %>"><%= post.title %></a></p>
+      <% }); %>
+</div>
+

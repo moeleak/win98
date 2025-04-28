@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="<%= config.language %>">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+  <title><%= config.title %><% if (page.title) { %> - <%= page.title %><% } %></title>
+  <link rel="stylesheet" href="https://unpkg.com/98.css" />
+  <link rel="stylesheet" href="<%- url_for('/css/style.css') %>">
+</head>
+<body class="windows-desktop">
+  <div id="initial-content-wrapper" style="display: none;">
+    <%- body %>
+  </div>
+
+  <!-- 桌面图标 -->
+  <div class="desktop-icons">
+      <!-- 我的电脑 (存档) -->
+      <a href="<%- url_for('/archives/') %>" class="desktop-icon" id="icon-mycomputer" data-window-title="存档">
+        <img src="<%- url_for('/images/icon_mycomputer.png') %>" alt="我的电脑">
+        <span>我的电脑</span>
+      </a>
+      <!-- 我的文档 (关于) -->
+      <a href="<%- url_for('/about/') %>" class="desktop-icon" id="icon-mydocuments" data-window-title="关于我">
+        <img src="<%- url_for('/images/icon_mydocuments.png') %>" alt="我的文档">
+        <span>我的文档</span>
+      </a>
+      <!-- 网上邻居 (友链) -->
+      <a href="<%- url_for('/links/') %>" class="desktop-icon" id="icon-network" data-window-title="友情链接">
+        <img src="<%- url_for('/images/icon_network.png') %>" alt="网上邻居">
+        <span>网上邻居</span>
+      </a>
+  </div>
+
+  <div id="window-container"></div>
+
+  <script src="<%- url_for('/js/win98.js') %>"></script>
+</body>
+</html>
+

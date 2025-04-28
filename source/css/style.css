@@ -1,0 +1,327 @@
+/* Custom styles to complement 98.css */
+
+@font-face {
+  font-family: 'Zpix'; /* 定义字体名称，以便后续使用 */
+  /*
+   * 'url()' 中的路径是相对于 CSS 文件本身的位置。
+   * CSS 文件位于 source/css/ 目录下，字体位于 source/fonts/ 目录下。
+   * 因此，需要先 '../' 返回上一级 (source/)，再进入 'fonts/'。
+   */
+  src: url('../fonts/zpix.ttf') format('truetype');
+  /* 如果你有其他格式的字体文件 (如 woff2)，可以一起提供以提高兼容性 */
+  /* src: url('../fonts/zpix.woff2') format('woff2'),
+         url('../fonts/zpix.ttf') format('truetype'); */
+
+  /* 指定字重和样式，通常像素字体只有一个 normal/400 */
+  font-weight: normal; /* 或 400 */
+  font-style: normal;
+  /* 可选：字体显示策略，swap 表示先用后备字体显示，字体加载完再替换 */
+  font-display: swap;
+}
+
+/* Desktop Background and Font */
+body.windows-desktop {
+  background-color: #008080; /* Teal */
+  background-image: url('../images/desktop_bg.png');
+  background-repeat: no-repeat;
+  background-size: cover;
+  /* 98.css already sets a base font, but you can override if needed */
+  /* font-family: "Pixelated MS Sans Serif", "Tahoma"; */
+  overflow: hidden;
+  height: 100vh;
+  margin: 0;
+}
+
+/* Desktop Icons Layout */
+.desktop-icons {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  display: flex;
+  flex-direction: column; /* Arrange icons vertically */
+  flex-wrap: wrap; /* Allow wrapping into columns */
+  max-height: calc(100vh - 40px); /* Prevent overflow */
+  align-content: flex-start; /* Align columns to the left */
+  gap: 15px 10px; /* Vertical and horizontal gap */
+  z-index: 5; /* Ensure icons are above background but below windows */
+}
+
+.desktop-icon {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  color: white; /* Icon text color */
+  text-decoration: none;
+  width: 80px;
+  padding: 5px;
+  cursor: default; /* Default cursor like Windows */
+  user-select: none;
+}
+
+.desktop-icon:hover,
+.desktop-icon:focus {
+  /* Optional: Add a subtle hover effect if desired */
+   background-color: rgba(0, 0, 128, 0.3); /* Semi-transparent blue */
+   outline: 1px dotted rgba(255, 255, 255, 0.7);
+}
+
+.desktop-icon img {
+  width: 32px; /* Standard icon size */
+  height: 32px;
+  margin-bottom: 5px;
+}
+
+.desktop-icon span {
+   /* Text background usually transparent on desktop */
+  /* background-color: transparent; */
+  padding: 1px 3px;
+  font-size: 11px; /* Smaller font for icons */
+  /* Add selected state style */
+}
+.desktop-icon.selected span { /* Example selected state */
+   background-color: #000080; /* Blue background */
+   color: white;
+   outline: 1px dotted white;
+}
+
+
+/* Window Container */
+#window-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none; /* Container doesn't block interactions */
+}
+
+/* Ensure JS-created windows interact correctly */
+#window-container > .window { /* Target windows created by JS */
+    position: absolute; /* Crucial for dragging */
+    pointer-events: auto; /* Windows should be interactive */
+    min-width: 200px; /* Use 98.css defaults or override */
+    min-height: 150px;
+}
+
+/* Make the title bar the drag handle */
+#window-container > .window > .title-bar {
+    cursor: grab;
+    user-select: none;
+}
+#window-container > .window > .title-bar:active {
+    cursor: grabbing;
+}
+
+#window-container > .window > div[style*="cursor: nwse-resize"] { /* Example selector based on inline style */
+     touch-action: none; /* 禁用缩放手柄上的默认触摸行为 */
+}
+
+/* Style for content loaded inside the window body if needed */
+.win98-content { /* Use the class from post.ejs etc. */
+   /* Add styles specific to your blog content if 98.css defaults aren't enough */
+   font-size: 1rem; /* Example: adjust content font size */
+   line-height: 1.5;
+}
+.win98-content h1, .win98-content h2 { /* Example */
+    margin-bottom: 0.5em;
+}
+
+
+/* Optional Shake Animation (keep if desired) */
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-3px); }
+  75% { transform: translateX(3px); }
+}
+.window-shake { animation: shake 0.3s ease-in-out; }
+
+#window-container > .window {
+    display: flex;
+    flex-direction: column;
+    /* 防止窗口内容溢出窗口边界 (例如绝对定位的内部元素) */
+    overflow: hidden;
+    /* 高度由 JS 控制或用户调整大小 */
+}
+
+/* 防止标题栏被压缩 */
+#window-container > .window > .title-bar {
+    flex-shrink: 0;
+}
+
+/* 让 .window-body 占据所有剩余的垂直空间，并允许滚动 */
+#window-container > .window > .window-body {
+    /* flex: 1; 是 flex-grow: 1; flex-shrink: 1; flex-basis: 0%; 的简写 */
+    /* 它会告诉元素占据父容器（减去兄弟元素固定高度后）的剩余空间 */
+    flex: 1;
+    /* 最关键的部分：允许垂直滚动，隐藏水平滚动 */
+    overflow-y: auto;
+    overflow-x: hidden;
+    /* 确保内边距(padding)包含在元素尺寸内，避免计算错误 */
+    box-sizing: border-box;
+     /* 有时候需要明确最小高度为0来配合flex:1 */
+    min-height: 0;
+}
+
+/* 如果窗口内的内容使用了<pre>标签或其他可能导致长行的元素 */
+/* 可以考虑让它们换行 */
+#window-container > .window > .window-body pre {
+    white-space: pre-wrap; /* 允许 pre 标签内的内容换行 */
+    word-wrap: break-word; /* 在单词边界处断行 */
+}
+
+
+/* --- Image Styling --- */
+#window-container > .window > .window-body img {
+    display: block;        /* Allows margin auto to work */
+    margin-left: auto;     /* Horizontal centering */
+    margin-right: auto;    /* Horizontal centering */
+    max-width: 90%;        /* Prevent touching edges, leave some space */
+    height: auto;          /* Maintain aspect ratio */
+    margin-top: 1em;       /* Space above image */
+    margin-bottom: 1em;    /* Space below image */
+    /* Optional: Add a simple border like old browsers */
+    /* border: 1px solid #888; */
+}
+
+/* --- Font Adjustments --- */
+#window-container > .window > .window-body {
+    /* Base font size */
+    font-size: 12px;
+    line-height: 1.6; /* 可能需要调整行高以适应像素字体 */
+    /* Font Stack: 将 'Zpix' 放在最前面 */
+    font-family: "Zpix", "Tahoma", "SimSun", "Microsoft YaHei", "PingFang SC", sans-serif;
+    /* 抗锯齿：对于像素字体，通常禁用或使用 crisp-edges */
+    font-smooth: never; /* Firefox */
+    -webkit-font-smoothing: none; /* Chrome, Safari, Edge */
+    image-rendering: pixelated; /* 尝试让浏览器以像素化方式渲染 */
+    image-rendering: crisp-edges; /* 另一个选项 */
+}
+
+/* Reduce Title Sizes */
+#window-container > .window > .window-body h1 {
+    font-size: 1.6em;  /* Relative to the 12px/13px base */
+    margin-bottom: 0.5em;
+    font-weight: normal;
+    /* Resetting 98.css potential extra margin/padding if needed */
+    margin-top: 0.5em;
+    padding: 0;
+}
+
+#window-container > .window > .window-body h2 {
+    font-size: 1.4em;
+    margin-top: 1em;
+    margin-bottom: 0.4em;
+    font-weight: normal;
+    padding: 0;
+}
+
+#window-container > .window > .window-body h3 {
+    font-size: 1.2em;
+    margin-top: 0.8em;
+    margin-bottom: 0.3em;
+    font-weight: normal;
+    padding: 0;
+}
+
+/* Add styles for h4, h5, h6 if you use them */
+#window-container > .window > .window-body h4 {
+    font-size: 1.1em;
+    margin-top: 0.7em;
+    margin-bottom: 0.2em;
+    font-weight: normal;
+    padding: 0;
+}
+
+
+/* --- 代码块样式修正 (针对 Table 结构) --- */
+
+/* 1. 重置包含代码块的 table 样式 */
+#window-container > .window > .window-body table {
+    border-collapse: collapse !important; /* 合并边框 */
+    border-spacing: 0 !important;      /* 移除单元格间距 */
+    border: none !important;           /* 移除表格外边框 */
+    width: 100% !important;          /* 表格宽度100% */
+    margin: 1em 0 !important;        /* 保留垂直外边距 */
+    padding: 0 !important;           /* 移除表格内边距 */
+    background: none !important;     /* 清除表格背景 */
+    font-size: inherit !important;     /* 继承字体大小 */
+}
+
+/* 2. 重置表格内的 a, tbody, tr, td 的基础样式 */
+#window-container > .window > .window-body table tbody,
+#window-container > .window > .window-body table tr,
+#window-container > .window > .window-body table td {
+    border: none !important;           /* 移除单元格边框 */
+    padding: 0 !important;           /* 移除单元格内边距 */
+    margin: 0 !important;            /* 移除外边距 */
+    background: none !important;     /* 清除单元格背景 */
+    vertical-align: top !important;    /* 垂直对齐方式 */
+    font-size: inherit !important;     /* 继承字体大小 */
+    line-height: inherit !important;   /* 继承行高 */
+}
+
+/* 3. 隐藏行号列 (第一列) */
+#window-container > .window > .window-body table td.gutter {
+    display: none !important;
+}
+
+/* 4. 确保代码列占据所有可用空间 (虽然隐藏第一列后会自动占据，但明确一下) */
+#window-container > .window > .window-body table td.code {
+    width: 100% !important;
+}
+
+/* 5. 清理代码列内的 pre 元素的默认或继承样式 */
+#window-container > .window > .window-body table td.code pre {
+    margin: 0 !important;            /* 移除 pre 的外边距 */
+    padding: 0 !important;           /* 移除 pre 的内边距 (样式将施加在 pre 上) */
+    border: none !important;           /* 移除 pre 可能有的边框 */
+    background: none !important;     /* 移除 pre 可能有的背景 */
+    box-shadow: none !important;       /* 移除 pre 可能有的阴影 */
+    overflow: visible !important;    /* 让 pre 自身不滚动，滚动由样式决定 */
+    width: auto !important;          /* 宽度自动 */
+    position: static !important;     /* 重置定位 */
+    white-space: normal !important;  /* 重置 white-space，后面会重新设置 */
+}
+
+/* 6. 将 Win98 风格样式应用到代码列的 pre 元素上 */
+#window-container > .window > .window-body table td.code pre {
+    display: block !important;
+    background-color: #ffffff !important; /* 白色背景 */
+    /* Win98 风格边框 */
+    box-shadow: inset 1px 1px 0px #ffffff, inset -1px -1px 0px #848584 !important;
+    border: 1px solid !important;
+    border-color: #848584 #ffffff #ffffff #848584 !important;
+    padding: 8px !important;            /* 内边距 */
+    font-family: "Courier New", Courier, monospace !important; /* 等宽字体 */
+    font-size: 12px !important;         /* 字体大小 */
+    line-height: 1.5 !important;        /* 行高 */
+    color: #000000 !important;         /* 文本颜色 */
+    white-space: pre-wrap !important;   /* 允许长行自动换行 */
+    word-wrap: break-word !important;   /* 在单词边界处换行 */
+    overflow: auto !important;        /* 如果内容超出，显示滚动条 */
+    min-height: 1.5em; /* 最小高度，防止空代码块塌陷 */
+}
+
+/* 7. 清理代码列内 pre > code 或 pre > span 的样式 (以防万一) */
+#window-container > .window > .window-body table td.code pre code,
+#window-container > .window > .window-body table td.code pre span.line {
+    display: inline !important; /* 改回 inline，因为 pre 控制块级 */
+    background: none !important;
+    border: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    font-family: inherit !important; /* 继承 pre 的字体 */
+    font-size: inherit !important;
+    line-height: inherit !important;
+    /* 保留语法高亮的颜色 */
+    /* color: inherit !important; */ /* 不要取消这行的注释，否则语法高亮会失效 */
+    white-space: inherit !important; /* 继承 pre 的换行设置 */
+    position: static !important;
+    box-shadow: none !important;
+}
+/* 移除行号 pre 里的换行符，虽然隐藏了，但以防万一影响布局 */
+#window-container > .window > .window-body table td.gutter pre br {
+    display: none !important;
+}
+
