@@ -1,49 +1,37 @@
-/* Custom styles to complement 98.css */
+/* source/css/style.css */
 
+/* --- Zpix Font Definition --- */
 @font-face {
-  font-family: 'Zpix'; /* 定义字体名称，以便后续使用 */
-  /*
-   * 'url()' 中的路径是相对于 CSS 文件本身的位置。
-   * CSS 文件位于 source/css/ 目录下，字体位于 source/fonts/ 目录下。
-   * 因此，需要先 '../' 返回上一级 (source/)，再进入 'fonts/'。
-   */
+  font-family: 'Zpix';
   src: url('../fonts/zpix.ttf') format('truetype');
-  /* 如果你有其他格式的字体文件 (如 woff2)，可以一起提供以提高兼容性 */
-  /* src: url('../fonts/zpix.woff2') format('woff2'),
-         url('../fonts/zpix.ttf') format('truetype'); */
-
-  /* 指定字重和样式，通常像素字体只有一个 normal/400 */
-  font-weight: normal; /* 或 400 */
+  font-weight: normal;
   font-style: normal;
-  /* 可选：字体显示策略，swap 表示先用后备字体显示，字体加载完再替换 */
   font-display: swap;
 }
 
-/* Desktop Background and Font */
+/* --- Desktop Background and Font --- */
 body.windows-desktop {
-  background-color: #008080; /* Teal */
+  background-color: #008080;
   background-image: url('../images/desktop_bg.png');
   background-repeat: no-repeat;
   background-size: cover;
-  /* 98.css already sets a base font, but you can override if needed */
-  /* font-family: "Pixelated MS Sans Serif", "Tahoma"; */
   overflow: hidden;
   height: 100vh;
   margin: 0;
 }
 
-/* Desktop Icons Layout */
+/* --- Desktop Icons Layout --- */
 .desktop-icons {
   position: absolute;
   top: 20px;
   left: 20px;
   display: flex;
-  flex-direction: column; /* Arrange icons vertically */
-  flex-wrap: wrap; /* Allow wrapping into columns */
-  max-height: calc(100vh - 40px); /* Prevent overflow */
-  align-content: flex-start; /* Align columns to the left */
-  gap: 15px 10px; /* Vertical and horizontal gap */
-  z-index: 5; /* Ensure icons are above background but below windows */
+  flex-direction: column;
+  flex-wrap: wrap;
+  max-height: calc(100vh - 40px);
+  align-content: flex-start;
+  gap: 15px 10px;
+  z-index: 5;
 }
 
 .desktop-icon {
@@ -51,306 +39,66 @@ body.windows-desktop {
   flex-direction: column;
   align-items: center;
   text-align: center;
-  color: white; /* Icon text color */
+  color: white;
   text-decoration: none;
   width: 80px;
   padding: 5px;
-  cursor: default; /* Default cursor like Windows */
+  cursor: default;
   user-select: none;
 }
 
 .desktop-icon:hover,
 .desktop-icon:focus {
-  /* Optional: Add a subtle hover effect if desired */
-   background-color: rgba(0, 0, 128, 0.3); /* Semi-transparent blue */
+   background-color: rgba(0, 0, 128, 0.3);
    outline: 1px dotted rgba(255, 255, 255, 0.7);
 }
 
 .desktop-icon img {
-  width: 32px; /* Standard icon size */
+  width: 32px;
   height: 32px;
   margin-bottom: 5px;
 }
 
 .desktop-icon span {
-   /* Text background usually transparent on desktop */
-  /* background-color: transparent; */
   padding: 1px 3px;
-  font-size: 11px; /* Smaller font for icons */
-  /* Add selected state style */
+  font-size: 11px;
+  font-family: "Zpix", "SimSun", "Microsoft YaHei", sans-serif;
+  font-smooth: never;
+  -webkit-font-smoothing: none;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
 }
-.desktop-icon.selected span { /* Example selected state */
-   background-color: #000080; /* Blue background */
+
+.desktop-icon.selected span {
+   background-color: #000080;
    color: white;
    outline: 1px dotted white;
 }
 
-
-/* Window Container */
+/* --- Window Container --- */
 #window-container {
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    pointer-events: none; /* Container doesn't block interactions */
+    pointer-events: none;
 }
 
-/* Ensure JS-created windows interact correctly */
-#window-container > .window { /* Target windows created by JS */
-    position: absolute; /* Crucial for dragging */
-    pointer-events: auto; /* Windows should be interactive */
-    min-width: 200px; /* Use 98.css defaults or override */
-    min-height: 150px;
-}
-
-/* Make the title bar the drag handle */
-#window-container > .window > .title-bar {
-    cursor: grab;
-    user-select: none;
-}
-#window-container > .window > .title-bar:active {
-    cursor: grabbing;
-}
-
-#window-container > .window > div[style*="cursor: nwse-resize"] { /* Example selector based on inline style */
-     touch-action: none; /* <<<--- 添加这一行：禁用缩放手柄上的默认触摸行为 */
-}
-
-/* Style for content loaded inside the window body if needed */
-.win98-content { /* Use the class from post.ejs etc. */
-   /* Add styles specific to your blog content if 98.css defaults aren't enough */
-   font-size: 1rem; /* Example: adjust content font size */
-   line-height: 1.5;
-}
-.win98-content h1, .win98-content h2 { /* Example */
-    margin-bottom: 0.5em;
-}
-
-
-/* Optional Shake Animation (keep if desired) */
-@keyframes shake {
-  0%, 100% { transform: translateX(0); }
-  25% { transform: translateX(-3px); }
-  75% { transform: translateX(3px); }
-}
-.window-shake { animation: shake 0.3s ease-in-out; }
-
+/* --- General Window Styling --- */
 #window-container > .window {
+    position: absolute;
+    pointer-events: auto;
+    min-width: 200px;
+    min-height: 150px;
     display: flex;
     flex-direction: column;
-    /* 防止窗口内容溢出窗口边界 (例如绝对定位的内部元素) */
     overflow: hidden;
-    /* 高度由 JS 控制或用户调整大小 */
-}
-
-/* 防止标题栏被压缩 */
-#window-container > .window > .title-bar {
-    flex-shrink: 0;
-}
-
-/* 让 .window-body 占据所有剩余的垂直空间，并允许滚动 */
-#window-container > .window > .window-body {
-    /* flex: 1; 是 flex-grow: 1; flex-shrink: 1; flex-basis: 0%; 的简写 */
-    /* 它会告诉元素占据父容器（减去兄弟元素固定高度后）的剩余空间 */
-    flex: 1;
-    /* 最关键的部分：允许垂直滚动，隐藏水平滚动 */
-    overflow-y: auto;
-    overflow-x: hidden;
-    /* 确保内边距(padding)包含在元素尺寸内，避免计算错误 */
-    box-sizing: border-box;
-     /* 有时候需要明确最小高度为0来配合flex:1 */
-    min-height: 0;
-}
-
-/* 如果窗口内的内容使用了<pre>标签或其他可能导致长行的元素 */
-/* 可以考虑让它们换行 */
-#window-container > .window > .window-body pre {
-    white-space: pre-wrap; /* 允许 pre 标签内的内容换行 */
-    word-wrap: break-word; /* 在单词边界处断行 */
-}
-
-
-/* --- Image Styling --- */
-#window-container > .window > .window-body img {
-    display: block;        /* Allows margin auto to work */
-    margin-left: auto;     /* Horizontal centering */
-    margin-right: auto;    /* Horizontal centering */
-    max-width: 90%;        /* Prevent touching edges, leave some space */
-    height: auto;          /* Maintain aspect ratio */
-    margin-top: 1em;       /* Space above image */
-    margin-bottom: 1em;    /* Space below image */
-    /* Optional: Add a simple border like old browsers */
-    /* border: 1px solid #888; */
-}
-
-/* --- Font Adjustments --- */
-#window-container > .window > .window-body {
-    /* Base font size */
-    font-size: 12px; /* 像素字体通常在特定大小下效果最好，12px 或 16px 比较常见 */
-    line-height: 1.6; /* 可能需要调整行高以适应像素字体 */
-    /* Font Stack: 将 'Zpix' 放在最前面 */
-    font-family: "Zpix", "Tahoma", "SimSun", "Microsoft YaHei", "PingFang SC", sans-serif;
-    /* 抗锯齿：对于像素字体，通常禁用或使用 crisp-edges */
-    font-smooth: never; /* Firefox */
-    -webkit-font-smoothing: none; /* Chrome, Safari, Edge */
-    image-rendering: pixelated; /* 尝试让浏览器以像素化方式渲染 */
-    image-rendering: crisp-edges; /* 另一个选项 */
-}
-
-/* Reduce Title Sizes */
-#window-container > .window > .window-body h1 {
-    font-size: 1.6em;  /* Relative to the 12px/13px base */
-    margin-bottom: 0.5em;
-    font-weight: normal;
-    /* Resetting 98.css potential extra margin/padding if needed */
-    margin-top: 0.5em;
-    padding: 0;
-}
-
-#window-container > .window > .window-body h2 {
-    font-size: 1.4em;
-    margin-top: 1em;
-    margin-bottom: 0.4em;
-    font-weight: normal;
-    padding: 0;
-}
-
-#window-container > .window > .window-body h3 {
-    font-size: 1.2em;
-    margin-top: 0.8em;
-    margin-bottom: 0.3em;
-    font-weight: normal;
-    padding: 0;
-}
-
-/* Add styles for h4, h5, h6 if you use them */
-#window-container > .window > .window-body h4 {
-    font-size: 1.1em;
-    margin-top: 0.7em;
-    margin-bottom: 0.2em;
-    font-weight: normal;
-    padding: 0;
-}
-
-
-/* --- 代码块样式修正 --- */
-#window-container > .window > .window-body pre {
-    /* 1. 重置可能导致问题的样式 */
-    border: none;            /* 移除 pre 元素自身可能存在的边框 */
-    background: none;        /* 移除 pre 元素自身的背景，让下面的样式生效 */
-    margin: 1em 0;         /* 保留垂直间距，移除水平外边距 (可能用于放置数字框) */
-    padding: 0;            /* 移除内边距，由内部 code 或我们自己控制 */
-    position: relative;      /* 确保 ::before/::after 相对自己定位 */
-
-    /* 2. 应用类似 Win98 输入框/文本区域的样式 */
-    background-color: #ffffff; /* 白色背景 */
-    /* 使用 98.css 的经典 inset 边框效果 */
-    box-shadow: inset 1px 1px 0px #ffffff, inset -1px -1px 0px #848584;
-    border: 1px solid;
-    border-color: #848584 #ffffff #ffffff #848584; /* top&left dark, bottom&right light */
-    padding: 8px;            /* 添加内部空间 */
-
-    /* 3. 字体和滚动 */
-    font-family: "Courier New", Courier, monospace; /* 强制使用等宽字体 */
-    font-size: 12px;         /* 调整字体大小 */
-    line-height: 1.5;        /* 行高 */
-    white-space: pre-wrap;   /* 允许长行自动换行 */
-    word-wrap: break-word;   /* 在单词边界处换行 */
-    overflow: auto;        /* 如果内容超出，显示滚动条 */
-
-    /* 4. 尝试隐藏左边的数字框 (基于猜测的常见模式) */
-    /* 如果数字框是 pre 的伪元素 */
-    &::before {
-        display: none !important;
-    }
-    /* 如果数字框是 pre 内部或外部的特定元素 (需要根据实际HTML调整选择器) */
-    /* 例如：.line-number, .gutter, etc. */
-    /* 这个选择器是猜测，可能无效 */
-    + .line-number-wrapper, /* 如果数字框是 pre 旁边的兄弟元素 */
-    > .line-number {        /* 如果数字框是 pre 的子元素 */
-        display: none !important;
-    }
-}
-
-/* 可选：确保 pre 内部的 code 标签样式干净 */
-#window-container > .window > .window-body pre code {
-    display: block; /* 让 code 占据 pre 的宽度 */
-    padding: 0;     /* code 不需要额外的内边距 */
-    background: none; /* code 不需要背景色 */
-    border: none;   /* code 不需要边框 */
-    box-shadow: none; /* code 不需要阴影 */
-    font-family: inherit; /* 继承 pre 的字体 */
-    color: #000000; /* 代码文字颜色 */
-}
-
-/* 为 Gitalk 评论输入框设置 Zpix 字体 */
-#window-container .window .window-body .gt-header-textarea {
-    font-family: "Zpix", "Courier New", Courier, monospace; /* 使用 Zpix，等宽字体作为后备 */
-    font-size: 13px; /* 调整为你希望的像素字体大小 */
-    line-height: 1.6; /* 调整行高以适应字体 */
-    /* 应用像素字体渲染优化 */
-    font-smooth: never;
-    -webkit-font-smoothing: none;
-    image-rendering: pixelated;
-    image-rendering: crisp-edges;
-}
-
-/* 为已发布的评论内容区域 (.gt-comment-body, .markdown-body) 设置 Zpix 字体 */
-/* .gt-comment-body 通常包含 .markdown-body，所以可以一起设置 */
-#window-container .window .window-body .gt-comment-body,
-#window-container .window .window-body .markdown-body {
-    font-family: "Zpix", "SimSun", "Microsoft YaHei", sans-serif; /* 使用 Zpix，宋体/雅黑等作为后备 */
-    font-size: 13px; /* 调整为你希望的像素字体大小 */
-    line-height: 1.6; /* 调整行高以适应字体 */
-    /* 应用像素字体渲染优化 */
-    font-smooth: never;
-    -webkit-font-smoothing: none;
-    image-rendering: pixelated;
-    image-rendering: crisp-edges;
-}
-
-/* 可选：如果评论内容里的某些元素（如 <p>, <li>）仍然没有应用字体，可以强制指定 */
-/* 取消下面的注释并按需使用 */
-#window-container .window .window-body .markdown-body p,
-#window-container .window .window-body .markdown-body li,
-#window-container .window .window-body .markdown-body pre,
-#window-container .window .window-body .markdown-body code {
-    font-family: inherit !important; /* 尝试继承父元素的字体，可能需要 !important 强制 */
-}
-
-/* --- Desktop Icon Font Customization --- */
-
-.desktop-icon span {
-    /* 1. 设置 Zpix 字体，并提供后备字体 */
-    font-family: "Zpix", "SimSun", "Microsoft YaHei", sans-serif;
-
-    /* 2. 调整字体大小（如果需要，可以覆盖之前的 11px 设置） */
-    /* font-size: 12px; */ /* 比如改为 12px，如果 11px 下 Zpix 不清晰 */
-
-    /* 3. 应用像素字体渲染优化（和之前 Gitalk 的一样） */
-    font-smooth: never;          /* Firefox */
-    -webkit-font-smoothing: none; /* Chrome, Safari, Edge */
-    image-rendering: pixelated;   /* 尝试让浏览器以像素化方式渲染 */
-    image-rendering: crisp-edges; /* 另一个选项 */
-
-    /* 4. 其他现有样式（比如颜色、文本对齐等）应该保持不变 */
-    /* color: white; */ /* 已有 */
-    /* text-align: center; */ /* 父元素 a 已处理 */
-    /* padding: 1px 3px; */ /* 已有 */
-    /* user-select: none; */ /* 父元素 a 已处理 */
+    transform-origin: center center;
 }
 
 /* --- Window Opening Animation --- */
-.window {
-    /* Base style for windows, ensure transform-origin is set if using scale */
-    transform-origin: center center; /* Or top left if preferred */
-    /* Add other base window styles if needed */
-}
-
 .window-opening {
-    /* Define the transition for the opening animation */
-    /* Apply transition to properties that change */
     transition: opacity 0.25s ease-out,
                 transform 0.25s ease-out,
                 left 0.25s ease-out,
@@ -359,21 +107,269 @@ body.windows-desktop {
                 height 0.25s ease-out;
 }
 
-/* --- 其他样式保持不变 --- */
-/* ... (你现有的所有其他 CSS 规则) ... */
-
-/* Ensure resize handle doesn't interfere with animation visually if needed */
-/* (Probably not necessary, but good to keep in mind) */
-.window-opening > div[style*="cursor: nwse-resize"] {
-    /* visibility: hidden; */ /* Hide during animation if it looks odd */
+/* --- Window Title Bar --- */
+#window-container > .window > .title-bar {
+    cursor: grab;
+    user-select: none;
+    flex-shrink: 0;
 }
-.window:not(.window-opening) > div[style*="cursor: nwse-resize"] {
-   /* visibility: visible; */
+#window-container > .window > .title-bar:active {
+    cursor: grabbing;
 }
 
+/* --- Window Resize Handle --- */
+#window-container > .window > div[style*="cursor: nwse-resize"] {
+     touch-action: none;
+}
 
-/* Custom close button visual (if default isn't desired) */
-/* .title-bar-controls button[aria-label="Close"] { */
-    /* Optional: Add custom styling or use :before for an icon font */
-/* } */
+/* --- Window Body (General Content Area) --- */
+#window-container > .window > .window-body {
+    flex: 1;
+    overflow-y: auto;
+    overflow-x: hidden; /* Hide by default, code block can enable scroll */
+    box-sizing: border-box;
+    padding: 8px;
+    min-height: 0;
+    font-size: 12px;
+    line-height: 1.6;
+    font-family: "Zpix", "Tahoma", "SimSun", "Microsoft YaHei", "PingFang SC", sans-serif;
+    /* General content font smoothing */
+    font-smooth: never;
+    -webkit-font-smoothing: none;
+    image-rendering: pixelated;
+    image-rendering: crisp-edges;
+}
+
+/* --- Image Popup Window Body Specific Styles --- */
+#window-container > .window > .window-body.image-popup-body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 5px;
+    background-color: #808080;
+    overflow: hidden;
+}
+
+/* --- Headings within Regular Window Body --- */
+#window-container > .window > .window-body:not(.image-popup-body) h1,
+#window-container > .window > .window-body:not(.image-popup-body) h2,
+#window-container > .window > .window-body:not(.image-popup-body) h3,
+#window-container > .window > .window-body:not(.image-popup-body) h4 {
+    font-weight: normal;
+    padding: 0;
+}
+#window-container > .window > .window-body:not(.image-popup-body) h1 { font-size: 1.6em; margin: 0.5em 0; }
+#window-container > .window > .window-body:not(.image-popup-body) h2 { font-size: 1.4em; margin: 1em 0 0.4em 0; }
+#window-container > .window > .window-body:not(.image-popup-body) h3 { font-size: 1.2em; margin: 0.8em 0 0.3em 0; }
+#window-container > .window > .window-body:not(.image-popup-body) h4 { font-size: 1.1em; margin: 0.7em 0 0.2em 0; }
+
+/* --- Images within Regular Window Body --- */
+#window-container > .window > .window-body:not(.image-popup-body) img {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    max-width: 90%;
+    height: auto;
+    margin-top: 1em;
+    margin-bottom: 1em;
+}
+
+/* --- Image within Image Popup Window Body --- */
+#window-container > .window > .window-body.image-popup-body img {
+    display: block;
+    max-width: 100%;
+    max-height: 100%;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+    margin: 0;
+    background-color: #ffffff;
+    box-shadow: 0 0 5px rgba(0,0,0,0.3);
+}
+
+
+/* --- Gitalk Styles --- */
+#window-container .window .window-body:not(.image-popup-body) .gt-header-textarea,
+#window-container .window .window-body:not(.image-popup-body) .gt-comment-body,
+#window-container .window .window-body:not(.image-popup-body) .markdown-body {
+    font-family: "Zpix", "SimSun", "Microsoft YaHei", sans-serif;
+    font-size: 13px;
+    line-height: 1.6;
+    font-smooth: never;
+    -webkit-font-smoothing: none;
+    image-rendering: pixelated;
+    image-rendering: crisp-edges;
+}
+
+#window-container .window .window-body:not(.image-popup-body) .markdown-body p,
+#window-container .window .window-body:not(.image-popup-body) .markdown-body li {
+    font-family: inherit !important;
+}
+
+/* --- Optional Shake Animation --- */
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-3px); }
+  75% { transform: translateX(3px); }
+}
+.window-shake { animation: shake 0.3s ease-in-out; }
+
+/* --- Utility Styles --- */
+body.is-dragging-window {
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+
+#window-container > .window > .window-body:not(.image-popup-body) pre code.hljs {
+    white-space: pre-wrap !important;   /* Preserve whitespace but wrap lines */
+    word-break: break-word !important;  /* Break long words/strings if necessary */
+    overflow-x: hidden !important;      /* Prevent internal horizontal scrollbar */
+}
+
+/* --- Window Resizer Handle Styling --- */
+.window-resizer {
+    /* 默认 (桌面端) 尺寸 */
+    width: 15px;  /* 较小的宽度 */
+    height: 15px; /* 较小的高度 */
+
+    /* 可选: 为桌面端添加细微的视觉提示，例如一个小的背景图案或颜色 */
+    /* background-color: rgba(0, 0, 0, 0.1); */
+    /* 或者使用一个抓手图标 */
+    /* background-image: url('../images/resize-grip.png'); */
+    /* background-repeat: no-repeat; */
+    /* background-position: center; */
+    /* background-size: 8px 8px; */
+
+    /* 平滑过渡大小变化（可选）*/
+    transition: width 0.1s ease, height 0.1s ease;
+}
+
+/* --- 媒体查询: 增大触摸设备的缩放手柄 --- */
+
+/* 推荐方式: 使用 pointer: coarse 检测主要输入方式是否为低精度（如手指）*/
+@media (pointer: coarse) {
+    .window-resizer {
+        /* 移动端/触摸设备尺寸 */
+        width: 35px;  /* 更大的触摸宽度 */
+        height: 35px; /* 更大的触摸高度 */
+
+        /* 可选: 在触摸设备上让触摸区域更明显 (调试用或永久) */
+        /* background-color: rgba(0, 255, 0, 0.2); */
+    }
+}
+
+/* --- HighlightJS Styles --- */
+
+/* 去掉 highlight.js / Rouge 生成的外框 */
+figure.highlight,
+figure.highlight table {
+  background: #C0C0C0 !important;   /* 跟 pre 保持一致 */
+  border: none !important;          /* 去边框 */
+  border-collapse: collapse;
+  margin: 0 !important;             /* 去默认外距 */
+  padding: 0 !important;            /* 去默认内距 */
+}
+
+/* 如果你用的是 Rouge（Jekyll 默认）会有 .gutter / .code 两列 */
+figure.highlight td,
+figure.highlight .gutter,
+figure.highlight .code {
+  background: #C0C0C0 !important;
+  border: none !important;
+}
+
+/* 让真正的 <pre> 继续保留 3D 凹凸效果 */
+figure.highlight pre {
+  margin: 0;        /* 别再留空隙 */
+  padding: 8px;     /* 和你原先一样 */
+}
+
+pre code.hljs {
+  display: block;
+  overflow-x: auto;
+  padding: 1em
+}
+code.hljs {
+  padding: 3px 5px
+}
+/*
+
+Visual Studio-like style based on original C# coloring by Jason Diamond <jason@diamond.name>
+
+*/
+.hljs {
+  background: #C0C0C0;
+  color: black
+}
+.hljs-comment,
+.hljs-quote,
+.hljs-variable {
+  color: #008000
+}
+.hljs-keyword,
+.hljs-selector-tag,
+.hljs-built_in,
+.hljs-name,
+.hljs-tag {
+  color: #00f
+}
+.hljs-string,
+.hljs-title,
+.hljs-section,
+.hljs-attribute,
+.hljs-literal,
+.hljs-template-tag,
+.hljs-template-variable,
+.hljs-type,
+.hljs-addition {
+  color: #a31515
+}
+.hljs-deletion,
+.hljs-selector-attr,
+.hljs-selector-pseudo,
+.hljs-meta {
+  color: #2b91af
+}
+.hljs-doctag {
+  color: #808080
+}
+.hljs-attr {
+  color: #f00
+}
+.hljs-symbol,
+.hljs-bullet,
+.hljs-link {
+  color: #00b0e8
+}
+.hljs-emphasis {
+  font-style: italic
+}
+.hljs-strong {
+  font-weight: bold
+}
+
+
+pre {
+  background: #C0C0C0;          /* Win98 灰 */
+  font-family: "Courier New", monospace;
+  font-weight: bold;
+  padding: 8px;                 /* 内边距 */
+  border-top:    2px solid #FFF;      /* 高光（上） */
+  border-left:   2px solid #FFF;      /* 高光（左） */
+  border-right:  2px solid #808080;   /* 阴影（右） */
+  border-bottom: 2px solid #808080;   /* 阴影（下） */
+  margin: 1em 0;                 /* 与正文留白，可按需调 */
+  overflow-x: auto;              /* 代码过长时横向滚动 */
+}
+
+code,
+code * {
+  font-family: 'Courier New', monospace !important;
+  font-weight: bold !important;
+  image-rendering:pixelated;
+}
+
+/* --- End of Styles --- */
+
 
