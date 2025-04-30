@@ -12,7 +12,7 @@
 /* --- Desktop Background and Font --- */
 body.windows-desktop {
   background-color: #008080;
-  background-image: url('../images/desktop_bg.png');
+  /* background-image: url('../images/desktop_bg.png'); */
   background-repeat: no-repeat;
   background-size: cover;
   overflow: hidden;
@@ -199,6 +199,10 @@ body.windows-desktop {
     -webkit-font-smoothing: none;
     image-rendering: pixelated;
     image-rendering: crisp-edges;
+}
+
+#window-container .window .window-body:not(.image-popup-body) .gt-header-controls-tip {
+  display: none !important;
 }
 
 #window-container .window .window-body:not(.image-popup-body) .markdown-body p,

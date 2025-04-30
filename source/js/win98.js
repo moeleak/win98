@@ -66,8 +66,8 @@ document.addEventListener('DOMContentLoaded', () => {
         // --- Calculate final position and size ---
         const screenWidth = window.innerWidth;
         const mobileBreakpoint = 768;
-        const defaultWidth = screenWidth < mobileBreakpoint ? Math.min(screenWidth - 20, 300) : 521;
-        const defaultHeight = screenWidth < mobileBreakpoint ? Math.min(window.innerHeight - 50, 400) : 350;
+        const defaultWidth = screenWidth < mobileBreakpoint ? Math.min(screenWidth - 20, 300) : 530;
+        const defaultHeight = screenWidth < mobileBreakpoint ? Math.min(window.innerHeight - 50, 400) : 640;
         const targetWidth = defaultWidth;
         const targetHeight = defaultHeight;
         const margin = 10;

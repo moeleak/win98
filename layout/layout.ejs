@@ -91,7 +91,7 @@
             id: uniquePageId, // Use the passed unique ID (contentUrl from win98.js)
             language: '<%- theme.gitalk.language || 'zh-CN' %>',
             distractionFreeMode: <%= theme.gitalk.distractionFreeMode === true %>,
-            // proxy: '<%- theme.gitalk.proxy || '' %>'
+            proxy: '<%- theme.gitalk.proxy || '' %>'
           });
 
           console.log(`[Gitalk Global] Instance created for #${targetContainerId}. Rendering...`);
