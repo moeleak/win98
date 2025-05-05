@@ -1,8 +1,7 @@
-# Gitalk 评论系统配置
 gitalk:
   enable: true # 是否启用 Gitalk
   clientID: '0v0' # 从 GitHub OAuth App 获取
-  clientSecret: 'OwO' # 从 GitHub OAuth App 获取
+  clientSecret: '0w0' # 从 GitHub OAuth App 获取
   repo: 'leak.moe' # 例如：myblog-comments
   owner: 'moeleak' # 例如：yourusername
   admin: ['moeleak'] # 博客管理员的 GitHub 用户名列表，例如：['yourusername']
@@ -13,3 +12,7 @@ gitalk:
   # 可以考虑部署一个 CORS 代理，然后取消下面的注释并填入代理地址
   proxy: 'https://proxy-gitalk-api.netlify.app/github_access_token'
 
+favicon:
+  enable: true
+  icon: /images/favicon.ico
+  touch_icon: /images/apple-touch-icon.png

@@ -3,12 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <link rel="apple-touch-icon" href="<%- theme.favicon.touch_icon %>">
+  <link rel="icon" href="<%- theme.favicon.icon %>">
 
-  <%# --- Base Title Set Here --- %>
-  <title><%= config.title %><% if (page.title) { %> - <%= page.title %><% } %></title>
-  <!-- 引入 98.css -->
+  <!-- 98.css -->
   <link rel="stylesheet" href="https://unpkg.com/98.css" />
-  <!-- 引入自定义的补充 CSS -->
+  <!-- hexo win98 CSS -->
   <link rel="stylesheet" href="<%- url_for('/css/style.css') %>">
 
   <%# --- 全局加载 Gitalk CSS (如果主题启用) --- %>
@@ -19,7 +19,8 @@
   <%# Hexo 注入的头部脚本会在这里 %>
 </head>
 <%# --- Add data-base-title to body --- %>
-<body class="windows-desktop" data-base-title="<%= config.title %>">
+
+<body class="windows-desktop" data-blog-title="<%= config.title %>">
 
   <!-- Hexo 渲染的初始内容，默认隐藏，仅供 JS fetch 读取 -->
   <div id="initial-content-wrapper" style="display: none;">
@@ -29,23 +30,22 @@
   <!-- 桌面图标 -->
   <div class="desktop-icons">
       <!-- 我的电脑 (存档) -->
-      <a href="<%- url_for('/archives/') %>" class="desktop-icon" id="icon-mycomputer" data-window-title="存档">
+      <a href="<%- url_for('/archives/') %>" class="desktop-icon" id="icon-mycomputer">
         <img src="<%- url_for('/images/icon_mycomputer.png') %>" alt="我的电脑">
         <span>我的电脑</span>
       </a>
       <!-- 我的文档 (关于) -->
-      <a href="<%- url_for('/about/') %>" class="desktop-icon" id="icon-mydocuments" data-window-title="关于我">
+      <a href="<%- url_for('/about/') %>" class="desktop-icon" id="icon-mydocuments">
         <img src="<%- url_for('/images/icon_mydocuments.png') %>" alt="我的文档">
         <span>我的文档</span>
       </a>
       <!-- 网上邻居 (友链) -->
-      <a href="<%- url_for('/links/') %>" class="desktop-icon" id="icon-network" data-window-title="友情链接">
+      <a href="<%- url_for('/links/') %>" class="desktop-icon" id="icon-network">
         <img src="<%- url_for('/images/icon_network.png') %>" alt="网上邻居">
         <span>网上邻居</span>
       </a>
       <!-- 记事本 (留言板) -->
-      <%# Note: Check if the guestbook page actually has comments enabled before showing icon? Or always show? %>
-      <a href="<%- url_for('/guestbook/') %>" class="desktop-icon" id="icon-guestbook" data-window-title="留言板">
+      <a href="<%- url_for('/guestbook/') %>" class="desktop-icon" id="icon-guestbook">
         <img src="<%- url_for('/images/icon_notepad.png') %>" alt="留言板">
         <span>留言板</span>
       </a>
@@ -84,11 +84,11 @@
         try {
           const gitalkInstance = new Gitalk({
             clientID: '<%- theme.gitalk.clientID %>',
-            clientSecret: '<%- theme.gitalk.clientSecret %>', // Still here, be mindful
+            clientSecret: '<%- theme.gitalk.clientSecret %>',
             repo: '<%- theme.gitalk.repo %>',
             owner: '<%- theme.gitalk.owner %>',
             admin: <%- JSON.stringify(theme.gitalk.admin || [theme.gitalk.owner]) %>,
-            id: uniquePageId, // Use the passed unique ID (contentUrl from win98.js)
+            id: uniquePageId,
             language: '<%- theme.gitalk.language || 'zh-CN' %>',
             distractionFreeMode: <%= theme.gitalk.distractionFreeMode === true %>,
             proxy: '<%- theme.gitalk.proxy || '' %>'
@@ -102,15 +102,13 @@
         } catch (error) {
           console.error(`[Gitalk Global] Error during Gitalk init/render for #${targetContainerId}:`, error);
           containerElement.innerHTML = `<p style="color:red;">Gitalk 初始化/渲染出错: ${error.message}</p>`;
-          // Remove initialized flag if setup failed mid-way? Maybe not necessary.
-          // delete containerElement.dataset.gitalkInitialized;
         }
       }
     </script>
   <% } %>
 
 
-  <!-- 引入交互逻辑的 JS (放在 Gitalk 函数定义之后) -->
+  <!-- 引入交互逻辑的 JS -->
   <script src="<%- url_for('/js/win98.js') %>"></script>
 </body>
 </html>

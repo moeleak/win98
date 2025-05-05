@@ -140,6 +140,11 @@ body.windows-desktop {
     image-rendering: crisp-edges;
 }
 
+
+table > tbody > tr > * {
+  font-family: "Zpix", "Tahoma", "SimSun", "Microsoft YaHei", "PingFang SC", sans-serif;
+}
+
 /* --- Image Popup Window Body Specific Styles --- */
 #window-container > .window > .window-body.image-popup-body {
     display: flex;
@@ -209,6 +214,97 @@ body.windows-desktop {
 #window-container .window .window-body:not(.image-popup-body) .markdown-body li {
     font-family: inherit !important;
 }
+
+/* --- Gitalk Button Styling (Strict 98.css Style) --- */
+
+/* General style for all Gitalk buttons inside windows */
+#window-container .window .window-body .gt-btn {
+    /* Base styles from 98.css button */
+    background: silver;
+    border: none; /* Border effect is via box-shadow */
+    border-radius: 0;
+    box-shadow: inset -1px -1px #0a0a0a, inset 1px 1px #fff, inset -2px -2px grey, inset 2px 2px #dfdfdf;
+    box-sizing: border-box;
+    color: #222; /* Use direct color instead of transparent + text-shadow trick */
+    min-height: 23px;
+    min-width: 75px;
+    padding: 0 12px;
+    text-shadow: none; /* Reset Gitalk's possible text-shadow */
+    cursor: default; /* Standard Win98 cursor */
+    user-select: none;
+    line-height: normal; /* Ensure proper vertical alignment */
+    text-transform: none; /* Prevent uppercase if Gitalk does it */
+    transition: none; /* Remove smooth transitions */
+    display: inline-flex; /* Better alignment for content inside */
+    align-items: center;
+    justify-content: center;
+
+    /* Font properties (ensure consistency) */
+    font-family: "Zpix","Pixelated MS Sans Serif", Arial;
+    font-size: 11px;
+    -webkit-font-smoothing: none;
+    font-weight: normal; /* Explicitly normal weight */
+}
+
+/* Remove background image/gradient from login button if present */
+#window-container .window .window-body .gt-btn {
+    background-image: none;
+}
+
+/* Style the primary button (like '评论') and Login button as 'default' */
+/* Target: Second public button in header, and the login button */
+#window-container .window .window-body .gt-header-controls .gt-btn-public:nth-of-type(2),
+#window-container .window .window-body .gt-btn-login {
+  /*
+    box-shadow: inset -2px -2px #0a0a0a, inset 1px 1px #0a0a0a, inset 2px 2px #fff, inset -3px -3px grey, inset 3px 3px #dfdfdf;
+  */
+    /* Optional: default buttons might be bold in some Win98 contexts */
+    /* font-weight: bold; */
+}
+
+/* Active (pressed) state for standard Gitalk buttons */
+#window-container .window .window-body .gt-btn:not([aria-disabled="true"]):active {
+    box-shadow: inset -1px -1px #fff, inset 1px 1px #0a0a0a, inset -2px -2px #dfdfdf, inset 2px 2px grey;
+    /* Simulate text shift */
+    padding-top: 2px;
+    padding-left: 13px;
+    padding-bottom: 0px; /* Adjust padding for pressed effect */
+    padding-right: 11px;
+}
+
+/* Active (pressed) state for 'default' Gitalk buttons */
+#window-container .window .window-body .gt-header-controls .gt-btn-public:nth-of-type(2):not([aria-disabled="true"]):active,
+#window-container .window .window-body .gt-btn:not([aria-disabled="true"]):active {
+    box-shadow: inset 2px 2px #0a0a0a, inset -1px -1px #0a0a0a, inset -2px -2px #fff, inset 3px 3px grey, inset -3px -3px #dfdfdf;
+    /* Simulate text shift for default button */
+    padding-top: 2px;
+    padding-left: 13px;
+    padding-bottom: 0px;
+    padding-right: 11px;
+}
+
+/* Focus state (using focus-visible for better accessibility) */
+#window-container .window .window-body .gt-btn:focus-visible {
+     outline: 1px dotted #000;
+     outline-offset: -4px;
+}
+/* Remove default browser outline when not using keyboard navigation */
+#window-container .window .window-body .gt-btn:focus:not(:focus-visible) {
+     outline: none;
+}
+
+
+/* Disabled state for Gitalk buttons (assuming aria-disabled="true") */
+#window-container .window .window-body .gt-btn[aria-disabled="true"] {
+    color: grey;
+    text-shadow: 1px 1px 0 #fff;
+    /* Reset box-shadow or use a specific disabled look if needed */
+    box-shadow: inset -1px -1px #0a0a0a, inset 1px 1px #fff, inset -2px -2px grey, inset 2px 2px #dfdfdf; /* Keep standard shadow for consistency unless specified otherwise */
+    /* background-color: #some-disabled-grey; /* Optional: slightly different background? */
+}
+
+/* --- End Gitalk Button Styling --- */
+
 
 /* --- Optional Shake Animation --- */
 @keyframes shake {
