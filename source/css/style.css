@@ -331,32 +331,111 @@ body.is-dragging-window {
 /* --- Window Resizer Handle Styling --- */
 .window-resizer {
     /* 默认 (桌面端) 尺寸 */
-    width: 15px;  /* 较小的宽度 */
-    height: 15px; /* 较小的高度 */
-
-    /* 可选: 为桌面端添加细微的视觉提示，例如一个小的背景图案或颜色 */
-    /* background-color: rgba(0, 0, 0, 0.1); */
-    /* 或者使用一个抓手图标 */
-    /* background-image: url('../images/resize-grip.png'); */
-    /* background-repeat: no-repeat; */
-    /* background-position: center; */
-    /* background-size: 8px 8px; */
-
-    /* 平滑过渡大小变化（可选）*/
+    width: 15px;
+    height: 15px;
     transition: width 0.1s ease, height 0.1s ease;
 }
 
-/* --- 媒体查询: 增大触摸设备的缩放手柄 --- */
+/* --- Responsive Tables --- */
+.table-wrapper {
+  overflow-x: auto;
+  margin: 1em 0;
+  border-top: 2px solid #808080;
+  border-left: 2px solid #808080;
+  border-right: 2px solid #FFF;
+  border-bottom: 2px solid #FFF;
+  padding: 1px;
+}
 
-/* 推荐方式: 使用 pointer: coarse 检测主要输入方式是否为低精度（如手指）*/
+.table-wrapper table {
+  /* 确保表格不会被强制压缩 */
+  width: 100%;
+  min-width: 500px;
+  border-collapse: collapse;
+  margin: 0;
+}
+
+
+/* --- Code Block Copy Button --- */
+.code-block-wrapper {
+  position: relative;
+  margin: 1em 0;
+}
+
+.code-block-wrapper pre {
+  margin: 0 !important;
+}
+
+.copy-code-button {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  z-index: 10;
+  opacity: 0; /* 默认隐藏 */
+  transition: opacity 0.2s ease-in-out;
+
+  background: silver;
+  border: none;
+  box-shadow: inset -1px -1px #0a0a0a, inset 1px 1px #fff, inset -2px -2px grey, inset 2px 2px #dfdfdf;
+  box-sizing: border-box;
+  color: #222;
+  min-height: 21px;
+  min-width: 60px;
+  padding: 0 10px;
+  font-family: "Zpix", "Pixelated MS Sans Serif", Arial;
+  font-size: 11px;
+  -webkit-font-smoothing: none;
+  font-weight: normal;
+  user-select: none;
+  cursor: default;
+}
+
+/* 当鼠标悬停在代码块上时显示按钮 */
+.code-block-wrapper:hover .copy-code-button {
+  opacity: 1;
+}
+
+/* 按钮按下状态 */
+.copy-code-button:active:not([disabled]) {
+  box-shadow: inset 1px 1px #0a0a0a, inset -1px -1px #fff, inset 2px 2px grey, inset -2px -2px #dfdfdf;
+  padding-top: 2px;
+  padding-left: 11px;
+}
+
+/* 按钮禁用状态 */
+.copy-code-button:disabled {
+  color: grey;
+  text-shadow: 1px 1px 0 #fff;
+}
+
+/* --- Code Block Language Label --- */
+.code-language-label {
+  position: absolute;
+  top: 5px;
+  left: 8px;
+  z-index: 10; /* 与复制按钮在同一层级 */
+  color: grey;
+  text-shadow: 1px 1px 0 #fff; /* Win98 经典的“雕刻”文字效果 */
+  font-family: "Zpix", "Pixelated MS Sans Serif", Arial;
+  font-size: 11px;
+  -webkit-font-smoothing: none;
+  font-weight: normal;
+  padding: 1px 5px;
+  user-select: none;
+  pointer-events: none; /* 确保标签不可点击 */
+  text-transform: uppercase; /* 让语言名称大写，如 JS, CSS */
+}
+
+
+/* --- Media Checking For Mobiles --- */
+
 @media (pointer: coarse) {
     .window-resizer {
-        /* 移动端/触摸设备尺寸 */
-        width: 35px;  /* 更大的触摸宽度 */
-        height: 35px; /* 更大的触摸高度 */
-
-        /* 可选: 在触摸设备上让触摸区域更明显 (调试用或永久) */
-        /* background-color: rgba(0, 255, 0, 0.2); */
+        width: 35px; 
+        height: 35px;
+    }
+    .code-block-wrapper .copy-code-button {
+        opacity: 1;
     }
 }
 

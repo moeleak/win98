@@ -321,6 +321,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             gitalkPlaceholder.innerHTML = '<p style="color:red;">错误：无法找到 Gitalk 初始化函数！</p>';
                         }
 
+                        enhanceContentLoaded(contentDiv);
                         setupWindowInteractions(contentDiv);
 
                     } else {
@@ -474,6 +475,79 @@ document.addEventListener('DOMContentLoaded', () => {
         handle.addEventListener('pointerdown', onPointerDown);
         if (handle.ondragstart !== undefined) { handle.ondragstart = () => false; } // Prevent native drag
     }
+
+    function enhanceContentLoaded(parentElement) {
+      if (!parentElement) return;
+    
+      // 1. 处理代码块：添加包裹层、复制代码按钮和语言标签
+      const codeBlocks = parentElement.querySelectorAll('pre');
+      codeBlocks.forEach(pre => {
+        // 防止重复添加
+        if (pre.parentNode.classList.contains('code-block-wrapper')) {
+          return;
+        }
+    
+        const wrapper = document.createElement('div');
+        wrapper.className = 'code-block-wrapper';
+    
+        // 将 pre 元素移动到 wrapper 中
+        pre.parentNode.insertBefore(wrapper, pre);
+        wrapper.appendChild(pre);
+    
+        // --- 创建并添加“复制代码”按钮 ---
+        const button = document.createElement('button');
+        button.className = 'copy-code-button';
+        button.textContent = '复制';
+        wrapper.appendChild(button);
+    
+        button.addEventListener('click', () => {
+          const code = pre.querySelector('code')?.innerText || pre.innerText;
+          navigator.clipboard.writeText(code).then(() => {
+            button.textContent = '已复制!';
+            button.disabled = true;
+            setTimeout(() => {
+              button.textContent = '复制';
+              button.disabled = false;
+            }, 2000);
+          }).catch(err => {
+              button.textContent = '失败';
+              console.error('复制失败', err);
+              setTimeout(() => {
+                button.textContent = '复制';
+              }, 2000);
+            });
+        });
+    
+        // --- 新增：创建并添加语言标签 ---
+        const codeElement = pre.querySelector('code');
+        if (codeElement) {
+            // 从 class 中匹配 "language-xxx"
+            const langMatch = codeElement.className.match(/hljs (\S+)/);
+            const language = langMatch ? langMatch[1] : null;
+    
+            if (language) {
+                const langLabel = document.createElement('span');
+                langLabel.className = 'code-language-label';
+                langLabel.textContent = language;
+                wrapper.appendChild(langLabel);
+            }
+        }
+      });
+    
+      // 2. 处理表格：添加包裹层以实现水平滚动
+      const tables = parentElement.querySelectorAll('table');
+      tables.forEach(table => {
+        // 防止重复包裹
+        if (table.parentNode.classList.contains('table-wrapper')) {
+          return;
+        }
+        const wrapper = document.createElement('div');
+        wrapper.className = 'table-wrapper';
+        table.parentNode.insertBefore(wrapper, table);
+        wrapper.appendChild(table);
+      });
+    }
+
 
     function setupWindowInteractions(parentElement) {
         if (!parentElement || (parentElement.dataset && parentElement.dataset.interactionListenerAttached === 'true')) {
