@@ -109,9 +109,10 @@ body.windows-desktop {
 
 /* --- Window Title Bar --- */
 #window-container > .window > .title-bar {
-    cursor: grab;
-    user-select: none;
-    flex-shrink: 0;
+  font-family: "Zpix", "Tahoma", "SimSun", "Microsoft YaHei", "PingFang SC", sans-serif;
+  cursor: grab;
+  user-select: none;
+  flex-shrink: 0;
 }
 #window-container > .window > .title-bar:active {
     cursor: grabbing;
