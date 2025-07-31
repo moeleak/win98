@@ -49,10 +49,15 @@
         <img src="<%- url_for('/images/icon_notepad.png') %>" alt="留言板">
         <span>留言板</span>
       </a>
+      <!-- 音乐播放器 -->
+      <a href="#" class="desktop-icon" id="icon-musicplayer">
+        <img src="<%- url_for('/images/icon_musicplayer.png') %>" alt="音乐播放器">
+        <span>音乐播放器</span>
+      </a>
   </div>
 
-  <!-- 这个容器用来放置动态创建的窗口 -->
   <div id="window-container"></div>
+  <div id="webamp-container"></div>
 
   <%# --- 全局加载 Gitalk JS 库 (如果主题启用) --- %>
   <% if (theme.gitalk && theme.gitalk.enable) { %>
@@ -110,6 +115,8 @@
 
   <!-- 引入交互逻辑的 JS -->
   <script src="<%- url_for('/js/win98.js') %>"></script>
+  <script src="https://unpkg.com/webamp@1.5.0/built/webamp.bundle.min.js"></script>
+  <script src="<%- url_for('/js/music-player.js') %>"></script>
 </body>
 </html>
 

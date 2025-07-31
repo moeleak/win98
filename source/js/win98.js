@@ -4,6 +4,10 @@ document.addEventListener('DOMContentLoaded', () => {
         return;
     }
     let highestZIndex = 10;
+    window.getWin98HighestZIndex = () => {
+      highestZIndex++;
+      return highestZIndex;
+    };
     let isInitialLoad = true;
     const blogTitle = document.body.dataset.blogTitle;
     const DESKTOP_TITLE_PLACEHOLDER = "Desktop";
@@ -773,4 +777,3 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
 });
-
