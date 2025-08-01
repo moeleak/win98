@@ -407,15 +407,21 @@ table > tbody > tr > * {
 /* --- NEW / CORRECTED: Icon Styling with SVG Masks --- */
 
 /* Prepare the icon container inside the links */
+/* Prepare the icon container inside the links */
 #window-container .window .window-body .gt-comment-like .gt-ico,
 #window-container .window .window-body .gt-comment-reply .gt-ico {
     display: inline-block;
     position: relative; /* [保持] 父元素作为定位参考 */
     width: 16px;
     height: 16px;
-    margin-right: 4px;
+    margin-right: 8px; /* --- 修改：从 4px 增加到 8px，增大图标和文字的间距 --- */
     vertical-align: middle; /* [优化] 确保图标与文字垂直对齐 */
 }
+
+#window-container .window .window-body .gt-comment-like .gt-ico .gt-ico-text {
+    display: none
+}
+
 
 /* Common style for ALL icons using mask */
 #window-container .window .window-body .gt-comment-like .gt-ico::before,
@@ -485,7 +491,7 @@ table > tbody > tr > * {
 #window-container .window .window-body .gt-action-count {
     color: #000;
     text-decoration: underline;
-    margin-left: 2px;
+    margin-left: 5px;
 }
 
 #window-container .window .window-body .gt-comment-like:hover .gt-action-count,

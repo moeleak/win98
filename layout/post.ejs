@@ -7,4 +7,13 @@
   <div class="post-content">
     <%- page.content %>
   </div>
+  <% if (theme.gitalk && theme.gitalk.enable) { %>
+    <%# This is just a placeholder. win98.js will find it, give it a unique ID, %>
+      <%# and call the global initializeGitalkForWindow function. %>
+      <div id="gitalk-container-placeholder" style="padding: 15px;">
+      <!-- Content will be rendered here by Gitalk if initialized successfully -->
+      <p><i>评论区加载中...</i></p> <%# Optional loading message %>
+      </div>
+  <% } %>
+
 </article>
